@@ -1,0 +1,27 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
+.coverage
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+.idea/
+.vscode/
+*.swp
+*.bak
+
+# Model and Data files
+synthetic_sessions.csv
+model_lgb.txt
+model_xgb.json
+pipeline.pkl
+test_sessions.csv
