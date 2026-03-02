@@ -113,6 +113,7 @@ class RecommendationEngine:
         final_recs = []
         cat_counts = {'main': 0, 'side': 0, 'dessert': 0, 'drink': 0}
         
+        # Prices in INR (₹)
         base_prices = {0: 100, 1: 200, 2: 400} 
         
         for _, row in df_sorted.iterrows():
