@@ -7,9 +7,11 @@ venv/
 ENV/
 .env
 
-# ML Models (Keep only essential production models if small, ignore others)
-# model.txt
-# datasets.zip
+# ML Models & Data
+*.csv
+prepare_datasets.py
+datasets.zip
+!datasets.zip
 
 # IDEs
 .vscode/
