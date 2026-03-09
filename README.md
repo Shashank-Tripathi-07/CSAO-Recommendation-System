@@ -3,6 +3,40 @@
 > [!IMPORTANT]
 > **New to Recommendation Systems?** Checkout our [Detailed Learning Guide](for-learn.md) for a deep-dive into the low-level implementation, feature engineering, and ensemble blending logic used in this project.
 
+```text
+      [ USER REQUEST ]
+             |
+             v
+    +-----------------+
+    |   REST API      | <--- FastAPI / Pydantic (Validation & OpenAPI)
+    +-----------------+
+             |
+      [ SCHEMATIZED REQ ]
+             |
+             v
+    +-----------------------+     +-----------------------+
+    | STAGE 1: RETRIEVAL     |     |  ITEM CATALOG (EMB)   |
+    | (Recall / Vector NN)  | <--> |  [50k+ Items Space]   |
+    +-----------------------+     +-----------------------+
+             |
+      [ ~50 CANDIDATES ]
+             |
+             v
+    +-----------------------+     +-----------------------+
+    | STAGE 2: RANKING       |     |   GDBT ENSEMBLE       |
+    | (Precision / Lambda)  | <--- |   [LGBM + XGB + CB]   |
+    +-----------------------+     +-----------------------+
+             |
+      [ SORTED LIST ]
+             |
+             v
+    +-----------------+
+    | DIVERSITY FILTER| <--- Business Logic Tier
+    +-----------------+
+             |
+      [ FINAL RAIL ]
+```
+
 ## 🌟 Introduction
 This repository contains a **production-grade Cart Super Add-On (CSAO) Recommendation System**. Unlike simple toy projects, this microservice is architected for **sub-200ms P99 latency** and high horizontal scalability, using the same "Two-Stage Retrieval & Ranking" paradigm employed by industry leaders like Uber Eats and Pinterest.
 
