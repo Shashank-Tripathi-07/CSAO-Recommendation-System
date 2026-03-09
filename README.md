@@ -1,10 +1,5 @@
 # CSAO Rail Recommendation System
 
-> [!IMPORTANT]
-> **Hackathon Judges**: For a deep-dive into the technical architecture, mathematical foundations, and detailed evaluation benchmarks, please refer to the following documents:
-> - **[Solution Report (Architecture & Math)](solution_report.md)**: Details on the two-stage ranking system and LambdaRank objective.
-> - **[Test Results (Benchmarks)](test_result.md)**: Full breakdown of LightGBM vs XGBoost vs Stacked Ensemble scores.
-
 ## Project Overview
 This project implements an intelligent Cart Super Add-On (CSAO) recommendation rail for a food delivery platform. It is designed to suggest relevant add-on items in real-time (<300ms latency) as customers build their carts, aiming to increase Average Order Value (AOV) and add-on acceptance rates. 
 
@@ -26,5 +21,5 @@ This project implements an intelligent Cart Super Add-On (CSAO) recommendation r
 ## Business Impact Projection
 Assuming a successful transition to real-world logs mirroring our high synthetic NDCG scores:
 - **Acceptance Rate Improvement**: Moving from a heuristic popularity baseline to personalized `lambdarank` typically lifts add-on acceptance by 15-25%. 
-- **AOV Lift**: If 10% of users accept an average ₹250 add-on on a ₹1,500 base cart, overall AOV will conservatively lift by ~1.6%.
+- **AOV Lift**: If 10% of users accept an average $3 add-on on a $20 base cart, overall AOV will conservatively lift by ~1.5%.
 - **Cart-to-Order Rate**: Presenting highly relevant complements (like drinks with a dry meal) reduces cart abandonment, yielding an estimated +0.5% conversion rate jump at checkout.
