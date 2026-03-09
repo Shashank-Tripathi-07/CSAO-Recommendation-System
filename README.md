@@ -1,72 +1,90 @@
-# 🚀 High-Performance CSAO Recommendation System
+# 🚀 CSAO: The Intelligent Cart Super Add-On Engine
 
-> [!IMPORTANT]
-> **New to Recommendation Systems?** Checkout our [Detailed Learning Guide](for-learn.md) for a deep-dive into the low-level implementation, feature engineering, and ensemble blending logic used in this project.
+> **"Solving the 300ms Cross-Sell Problem with Professional-Grade ML"**
 
+## 🌟 The Problem: Why Does This Project Exist?
+In modern e-commerce and food delivery apps (like Zomato), the "Checkout" moment is critical. Users are about to pay, and a timely, relevant suggestion can significantly increase the **Average Order Value (AOV)**.
+
+However, recommending the *right* add-on (like Raita with Biryani or Fries with a Burger) is hard because:
+1.  **Scale**: You might have 100,000+ items. You can't score all of them in a split second.
+2.  **Latency**: Users won't wait. You have exactly **300ms** to provide a recommendation before they pay and leave.
+3.  **Relevance**: If the recommendation is generic, users ignore it. It must feel personal and context-aware.
+
+---
+
+## 🛠️ The Solution: A Two-Stage Recommendation Architecture
+This project implements a professional **Cart Super Add-On (CSAO)** microservice. It uses the same architectural pattern used by industry giants like Uber Eats, Pinterest, and Amazon.
+
+### 1. Stage 1: The "Quick Scan" (Vector Retrieval)
+We don't look at all 100,000 items. Instead, we use **Vector Search**. We treat every item as a mathematical point in a high-dimensional space.
+*   **How it works**: When you add an item to your cart, we instantly find the top 50 "nearest" items that "mathematically" belong together.
+*   **Result**: 100,000 items → 50 relevant candidates in **<10ms**.
+
+### 2. Stage 2: The "Expert Verdict" (Triple-Stacked Ensemble)
+Once we have 50 candidates, we need to be *sure* about the ranking. We pass these 50 items through an **Ensemble of 3 Machine Learning Models**:
+- **LightGBM**: Fast and efficient with session data.
+- **XGBoost**: Excellent at capturing subtle correlations.
+- **CatBoost**: Masters categorical data (like Cuisines and Areas) without complex preprocessing.
+
+By "stacking" these models, we average out individual biases and deliver a hyper-accurate, sorted list of recommendations.
+
+---
+
+## 🏗️ Technical Infra at a Glance
 ```text
       [ USER REQUEST ]
              |
              v
     +-----------------+
-    |   REST API      | <--- FastAPI / Pydantic (Validation & OpenAPI)
+    |   FastAPI       | <--- Clean Entry Point (Validation & Documentation)
     +-----------------+
              |
-      [ SCHEMATIZED REQ ]
-             |
-             v
     +-----------------------+     +-----------------------+
-    | STAGE 1: RETRIEVAL     |     |  ITEM CATALOG (EMB)   |
-    | (Recall / Vector NN)  | <--> |  [50k+ Items Space]   |
+    | Stage 1: Retrieval     |     |  Vector Space Index   |
+    | (Recall / Vector NN)  | <--> |  [Semantic Search]    |
     +-----------------------+     +-----------------------+
              |
-      [ ~50 CANDIDATES ]
-             |
-             v
     +-----------------------+     +-----------------------+
-    | STAGE 2: RANKING       |     |   GDBT ENSEMBLE       |
+    | Stage 2: Ranking       |     |   ML Ensemble Tier    |
     | (Precision / Lambda)  | <--- |   [LGBM + XGB + CB]   |
     +-----------------------+     +-----------------------+
              |
-      [ SORTED LIST ]
-             |
-             v
-    +-----------------+
-    | DIVERSITY FILTER| <--- Business Logic Tier
-    +-----------------+
-             |
-      [ FINAL RAIL ]
+      [ FINAL RECOMMENDATIONS ]
 ```
 
-## 🌟 Introduction
-This repository contains a **production-grade Cart Super Add-On (CSAO) Recommendation System**. Unlike simple toy projects, this microservice is architected for **sub-200ms P99 latency** and high horizontal scalability, using the same "Two-Stage Retrieval & Ranking" paradigm employed by industry leaders like Uber Eats and Pinterest.
+---
 
-We combine **Vector Search** for massive retrieval with a **Triple-Stacked GBDT Ensemble** (LightGBM + XGBoost + CatBoost) to deliver hyper-relevant recommendations at the point of checkout.
+## 🎓 For Learners
+If you are a student or a developer looking to understand how production-grade ML systems work, we have prepared a dedicated **[Detailed Learning Guide (for-learn.md)](file:///d:/Zomato%20Datathon/csao_recommendation/for-learn.md)**.
 
-[![CI](https://github.com/shashank-tripathi/csao-recommender/actions/workflows/ci.yml/badge.svg)](https://github.com/shashank-tripathi/csao-recommender/actions)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+In that file, we explain:
+- **Low-level Feature Engineering**: How we turn raw text into numbers.
+- **Ensemble Normalization**: How we mathematically blend 3 different ML models.
+- **Production DevOps**: CI/CD pipelines, Dockerization, and Load Testing.
 
-## 🏗️ System Design Deep-Dive
+---
 
-### 1. The Two-Stage Paradigm
-Standard industry practice (Uber Eats, Pinterest) dictates that scoring every item in a large catalog is computationally prohibitive for a 300ms budget.
-- **Recall (Stage 1)**: We use **Vector Search** on item embeddings. This treats recommendation as a geometry problem, fetching the top 50 "nearby" items in a high-dimensional space.
-- **Precision (Stage 2)**: A **Triple-Stacked Ensemble** scores these 50 candidates. We use **LambdaRank** because it optimizes the list gradient directly (NDCG) rather than just independent point probabilities.
+## 🚀 Getting Started
 
-### 2. Engineering Motivators
-- **FastAPI / Pydantic**: Eliminates manual schema handling. By enforcing strict schemas at the entry point, we guarantee data integrity throughout the internal pipeline.
-- **Z-Score Normalization**: Essential for ensembling. LightGBM, XGBoost, and CatBoost have different score distributions. Without standardization, the model with the highest variance would unfairly dominate the rank.
-- **Multi-Stage Docker**: Standard for senior devops. Keeping build dependencies out of the final image reduces the attack surface and ensures binary compatibility across environments.
+### 1. Prerequisites
+- Python 3.12+
+- Docker & Docker Compose
 
-## 🛠️ Tech Stack & CI/CD
-- **Inference**: FastAPI, Pydantic, CatBoost, XGBoost, LightGBM
-- **Infrastructure**: Docker (Multi-stage), GitHub Actions
-- **Quality**: Pytest (Unit/E2E), Ruff (Lint), Mypy (Types), Locust (Load Test)
-
-## 🚀 Deployment
+### 2. Fast API Serve
 ```bash
-# Build production image
-docker build -t csao-recsys:latest .
-
-# Run performance suite
-locust -f tests/load_test.py
+# Start the production-ready microservice
+docker-compose up --build
 ```
+The API will be available at `http://localhost:8000`. You can explore the interactive documentation (Swagger UI) at `/docs`.
+
+### 3. Training & Evaluation
+```bash
+# Generate synthetic data and train the ensemble
+python src/csao/training/train.py
+
+# Evaluate the performance (NDCG@10, Precision)
+python src/csao/training/evaluate.py
+```
+
+---
+**CSAO Recommendation System** — *Built for performance, engineered for accuracy, designed for learning.* 🚀
