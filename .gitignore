@@ -12,6 +12,15 @@ ENV/
 prepare_datasets.py
 datasets.zip
 !datasets.zip
+catboost_info/
+*.bin
+*.json
+*.txt
+*.pkl
+!model_lgb.txt
+!model_xgb.json
+!model_cb.bin
+!pipeline.pkl
 
 # IDEs
 .vscode/
@@ -20,3 +29,4 @@ datasets.zip
 # OS
 .DS_Store
 Thumbs.db
+*.log
