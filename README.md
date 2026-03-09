@@ -1,7 +1,7 @@
 # 🚀 High-Performance CSAO Recommendation System
 
 > [!IMPORTANT]
-> **New to Recommendation Systems?** Checkout our [Detailed Learning Guide](file:///d:/Zomato%20Datathon/csao_recommendation/for-learn.md) for a deep-dive into the low-level implementation, feature engineering, and ensemble blending logic used in this project.
+> **New to Recommendation Systems?** Checkout our [Detailed Learning Guide](for-learn.md) for a deep-dive into the low-level implementation, feature engineering, and ensemble blending logic used in this project.
 
 ## 🌟 Introduction
 This repository contains a **production-grade Cart Super Add-On (CSAO) Recommendation System**. Unlike simple toy projects, this microservice is architected for **sub-200ms P99 latency** and high horizontal scalability, using the same "Two-Stage Retrieval & Ranking" paradigm employed by industry leaders like Uber Eats and Pinterest.
