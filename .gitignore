@@ -16,7 +16,6 @@ datasets.zip
 catboost_info/
 *.bin
 *.json
-*.txt
 *.pkl
 !model_lgb.txt
 !model_xgb.json
