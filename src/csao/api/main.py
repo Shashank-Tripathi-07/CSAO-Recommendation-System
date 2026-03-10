@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException, Depends, Security, Request
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
 from fastapi.security.api_key import APIKeyHeader
+from fastapi.encoders import jsonable_encoder
 from csao.api.schemas import RecommendationRequest, RecommendationResponse, ErrorResponse
 from csao.core.engine import RecommendationEngine
 from csao.utils.monitoring import monitor
@@ -20,22 +21,22 @@ api_key_header = APIKeyHeader(name=API_KEY_NAME, auto_error=False)
 async def csao_exception_handler(request: Request, exc: CSAOError):
     return JSONResponse(
         status_code=400 if exc.error_code == "VALIDATION_ERROR" else 500,
-        content=ErrorResponse(
+        content=jsonable_encoder(ErrorResponse(
             error_code=exc.error_code,
             message=exc.message,
             details=exc.details
-        ).dict()
+        ))
     )
 
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
     return JSONResponse(
         status_code=422,
-        content=ErrorResponse(
+        content=jsonable_encoder(ErrorResponse(
             error_code="VALIDATION_ERROR",
             message="Invalid request body",
             details={"errors": exc.errors()}
-        ).dict()
+        ))
     )
 
 @app.exception_handler(Exception)
@@ -43,11 +44,11 @@ async def generic_exception_handler(request: Request, exc: Exception):
     monitor.log_metrics({"unhandled_exception": 1}, context="api_global", metadata={"error": str(exc)})
     return JSONResponse(
         status_code=500,
-        content=ErrorResponse(
+        content=jsonable_encoder(ErrorResponse(
             error_code="INTERNAL_SERVER_ERROR",
             message="An unexpected error occurred",
             details={"type": type(exc).__name__}
-        ).dict()
+        ))
     )
 
 async def get_api_key(api_key_header: str = Security(api_key_header)):
