@@ -18,3 +18,9 @@ class RecommendationResponse(BaseModel):
     recommendations: List[RecommendationItem]
     model_version: str
     timestamp: datetime = Field(default_factory=datetime.utcnow)
+
+class ErrorResponse(BaseModel):
+    error_code: str
+    message: str
+    details: Optional[Dict[str, Any]] = None
+    timestamp: datetime = Field(default_factory=datetime.utcnow)

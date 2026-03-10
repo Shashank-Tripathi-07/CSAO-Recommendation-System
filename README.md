@@ -64,6 +64,21 @@ In that file, we explain:
 
 ---
 
+## ⚠️ Important Caveats
+
+### Synthetic Data
+The data used in this repository (found in `src/csao/training/data_generation.py`) is **synthetic**. While the system demonstrates the correct two-stage recommendation architecture and ensemble ranking, the patterns, scores, and recommendations reflect fabricated logic rather than real-world Zomato user behavior. For a production deployment, real interaction logs (clicks, adds-to-cart, orders) would be required to train meaningful models.
+
+### Cold-Start Problem
+Recommendation systems naturally struggle with "Cold-Start" (new users or new items with no history). This microservice addresses this by:
+1.  **Item Cold-Start**: New items are tagged with high-level categories and cuisines. Even without specific interaction data, they can be retrieved in Stage 1 based on their semantic category embeddings.
+2.  **Fallback Logic**: If the ranking engine fails to produce high-confidence scores (e.g., empty cart or unknown user), the system falls back to a **Global Popularity Hook**, recommending high-conversion items that perform well across all sessions.
+
+### Security
+The API includes a basic **X-API-Key** authentication layer. For a real production deployment, you would integrate this with an OAuth2 provider or a centralized API gateway (like Kong or AWS APIGW).
+
+---
+
 ## 🚀 Getting Started
 
 ### 1. Prerequisites
@@ -84,6 +99,12 @@ python src/csao/training/train.py
 
 # Evaluate the performance (NDCG@10, Precision)
 python src/csao/training/evaluate.py
+```
+
+### 4. Running Tests
+```bash
+# Run the test suite
+pytest tests/
 ```
 
 ---

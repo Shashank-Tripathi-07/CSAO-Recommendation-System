@@ -12,6 +12,7 @@ ENV/
 prepare_datasets.py
 datasets.zip
 !datasets.zip
+# CatBoost artifacts
 catboost_info/
 *.bin
 *.json
